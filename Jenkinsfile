@@ -18,9 +18,9 @@ node {
     stage('Update Git') {
         // steps {
             echo "Received parameter: ${params.DOCKER_TAG}"
-            withCredentials([gitUsernamePassword(credentialsId: 'helios-jenkins-new', gitToolName: 'Default')]) {
-                sh "git config --global user.name hheelliiooss-admin"
-                sh "git config --global user.email developerteamhelios@gmail.com"
+            withCredentials([gitUsernamePassword(credentialsId: 'hendri-backend-kou', gitToolName: 'Default')]) {
+                sh "git config --global user.name hks17"
+                sh "git config --global user.email hendri.simbolon@helios.id"
                 
                 sh "cat deployment.yaml"
                 sh "sed -i 's+${params.DOCKER_USERNAME}/${params.DOCKER_IMAGE_NAME}.*+${params.DOCKER_USERNAME}/${params.DOCKER_IMAGE_NAME}:${params.DOCKER_TAG}+g' deployment.yaml"
