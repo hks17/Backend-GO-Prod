@@ -6,7 +6,7 @@ metadata:
   labels:
     app: backend-kouventa
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: backend-kouventa
@@ -49,11 +49,11 @@ spec:
             - name: DB_SU_SSLMODE
               value: "disable"
             - name: URL_FRONTEND
-              value: "https://kou2-fe.azurewebsites.net" 
+              value: "https://kou2-fe.azurewebsites.net"
             - name: URL_BACKEND
-              value: "https://pale-round-duck-cabinet.trycloudflare.com" 
+              value: "https://pale-round-duck-cabinet.trycloudflare.com"
             - name: CONFIG_AUTH_EMAIL
-              value: "aegr02adm@gmail.com" 
+              value: "aegr02adm@gmail.com"
             - name: CONFIG_AUTH_PASSWORD
               value: "zptjuepnlvjsdscp"
             - name: AI_API_KEY
