@@ -152,6 +152,16 @@ spec:
               value: "kouventa-db"
             - name: POSTGRES_MULTIPLE_DATABASES
               value: "kouventa-db,kouventa-su-db"
+          # Menambahkan volume mount untuk skrip inisialisasi
+          volumeMounts:
+            - name: postgres-init-volume
+              mountPath: /docker-entrypoint-initdb.d
+      # Menambahkan volume yang merujuk ke ConfigMap
+      volumes:
+        - name: postgres-init-volume
+          configMap:
+            name: postgres-init-db-configmap
+            defaultMode: 0755
 ---
 apiVersion: v1
 kind: Service
@@ -168,3 +178,39 @@ spec:
     - protocol: TCP
       port: 5432
       targetPort: 5432
+---
+# ConfigMap untuk skrip inisialisasi database
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init-db-configmap
+  namespace: default
+data:
+  # Skrip shell untuk menjalankan SQL di setiap database
+  init-dbs.sh: |
+    #!/bin/sh
+    set -e
+
+    echo "Menjalankan skrip inisialisasi untuk 'kouventa-db'..."
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "kouventa-db" <<-EOSQL
+        -- Skema tabel untuk kouventa-db
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            username VARCHAR(50) UNIQUE NOT NULL,
+            email VARCHAR(100) UNIQUE NOT NULL,
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+        );
+        -- Tambahkan skema tabel lain untuk kouventa-db di sini
+    EOSQL
+
+    echo "Menjalankan skrip inisialisasi untuk 'kouventa-su-db'..."
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "kouventa-su-db" <<-EOSQL
+        -- Skema tabel untuk kouventa-su-db
+        CREATE TABLE IF NOT EXISTS super_admins (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(50) NOT NULL,
+            email VARCHAR(100) UNIQUE NOT NULL,
+            last_login TIMESTAMP WITH TIME ZONE
+        );
+        -- Tambahkan skema tabel lain untuk kouventa-su-db di sini
+    EOSQL
