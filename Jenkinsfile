@@ -7,11 +7,6 @@ node {
             string(name: 'DOCKER_IMAGE_NAME', defaultValue: 'default_value', description: 'This is a parameter passed from another job')
         ])
     ])
-
-    environment{
-        GIT_CREDENTIALS_ID = 'hendri-backend-kou'
-        GIT_REPO_URL = 'https://github.com/hks17/Backend-GO-Prod.git'
-    }
     
     stage('Clone repository') {
       checkout scm
@@ -33,7 +28,7 @@ node {
                 sh "cat deployment.yaml"
                 sh "git add ."
                 sh "git commit -m 'Done by Jenkins job update-deployment: ${params.DOCKER_TAG}'"
-                sh "git push ${env.GIT_REPO_URL} HEAD:main"
+                sh "git push https://github.com/hks17/Backend-GO-Prod.git HEAD:main"
                 
             }
     }
