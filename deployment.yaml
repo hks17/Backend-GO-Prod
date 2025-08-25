@@ -15,7 +15,6 @@ spec:
       labels:
         app: backend-kouventa
     spec:
-      # The 'imagePullSecrets' section has been removed
       containers:
         - name: backend-kouventa-container
           image: hakaes/f9cozoxjvpzx:61
@@ -24,6 +23,56 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+          env:
+            - name: DB_HOST
+              value: "kou-zero-two.postgres.database.azure.com" 
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              value: "rootkou"
+            - name: DB_PASSWORD
+              value: "zero_two2025"
+            - name: DB_NAME
+              value: "kouventa-db"
+            - name: DB_SSLMODE
+              value: "require" 
+            - name: DB_SU_HOST
+              value: "kou-zero-two.postgres.database.azure.com" 
+            - name: DB_SU_PORT
+              value: "5432"
+            - name: DB_SU_USER
+              value: "rootkou"
+            - name: DB_SU_PASSWORD
+              value: "zero_two2025"
+            - name: DB_SU_NAME
+              value: "kouventa-su-db"
+            - name: DB_SU_SSLMODE
+              value: "require" 
+            - name: URL_FRONTEND
+              value: "https://kou2-fe.azurewebsites.net" 
+            - name: URL_BACKEND
+              value: "https://pale-round-duck-cabinet.trycloudflare.com" 
+            - name: CONFIG_AUTH_EMAIL
+              value: "aegr02adm@gmail.com" 
+            - name: CONFIG_AUTH_PASSWORD
+              value: "zptjuepnlvjsdscp"
+            - name: AI_API_KEY
+              value: "2m+UaHSgPZWD/8DuvUBAsAH/v9OHXmU1yj7iKaFkPU0jo85Y"
+            - name: AI_API_VERSION
+              value: "v1"
+            - name: LIMITER_MAX
+              value: "100"
+            - name: LIMITER_EXPIRATION
+              value: "30"
+            - name: KEY_ID
+              value: "7faf5fab4f6961cb47e3308b374a4960"
+            - name: UNIQUE_KEY_ID
+              value: "db92905a177f134ecfe2"
+            - name: JWT_PRIVATE_KEY_PATH
+              value: /pkg/keys/private.pem
+            - name: JWT_PUBLIC_KEY_PATH
+              value: /pkg/keys/public.pem
+
           livenessProbe:
             httpGet:
               path: /healthz
