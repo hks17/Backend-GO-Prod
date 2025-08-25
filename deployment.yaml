@@ -25,7 +25,7 @@ spec:
               protocol: TCP
           env:
             - name: DB_HOST
-              value: "kou-zero-two.postgres.database.azure.com" 
+              value: "postgres-service"
             - name: DB_PORT
               value: "5432"
             - name: DB_USER
@@ -35,9 +35,9 @@ spec:
             - name: DB_NAME
               value: "kouventa-db"
             - name: DB_SSLMODE
-              value: "require" 
+              value: "disable"
             - name: DB_SU_HOST
-              value: "kou-zero-two.postgres.database.azure.com" 
+              value: "postgres-service"
             - name: DB_SU_PORT
               value: "5432"
             - name: DB_SU_USER
@@ -47,7 +47,7 @@ spec:
             - name: DB_SU_NAME
               value: "kouventa-su-db"
             - name: DB_SU_SSLMODE
-              value: "require" 
+              value: "disable"
             - name: URL_FRONTEND
               value: "https://kou2-fe.azurewebsites.net" 
             - name: URL_BACKEND
@@ -117,3 +117,62 @@ spec:
       protocol: TCP
       port: 80
       targetPort: 8080
+
+---
+# Deployment untuk container PostgreSQL
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+  namespace: default
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres-container
+          image: postgres:13
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: "rootkou"
+            - name: POSTGRES_PASSWORD
+              value: "zero_two2025"
+            - name: POSTGRES_DB
+              value: "kouventa-db"
+            - name: POSTGRES_MULTIPLE_DATABASES
+              value: "kouventa-db,kouventa-su-db"
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+---
+# Service untuk container PostgreSQL
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: default
+  labels:
+    app: postgres
+spec:
+  type: ClusterIP
+  selector:
+    app: postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
