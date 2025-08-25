@@ -33,7 +33,7 @@ node {
                 sh "cat deployment.yaml"
                 sh "git add ."
                 sh "git commit -m 'Done by Jenkins job update-deployment: ${params.DOCKER_TAG}'"
-                sh "git push ${environment.GIT_REPO_URL} HEAD:main"
+                sh "git push ${env.GIT_REPO_URL} HEAD:main"
                 
             }
     }
