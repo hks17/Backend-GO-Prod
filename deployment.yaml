@@ -24,6 +24,8 @@ spec:
               containerPort: 8080
               protocol: TCP
           env:
+            - name: ENV
+              value: "prod"
             - name: DB_HOST
               value: "postgres-service"
             - name: DB_PORT
@@ -72,19 +74,6 @@ spec:
               value: /pkg/keys/private.pem
             - name: JWT_PUBLIC_KEY_PATH
               value: /pkg/keys/public.pem
-
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: http
-            initialDelaySeconds: 15
-            periodSeconds: 20
-          readinessProbe:
-            httpGet:
-              path: /ready
-              port: http
-            initialDelaySeconds: 5
-            periodSeconds: 10
           resources:
             requests:
               cpu: "100m"
