@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: backend-kouventa-container
-          image: hakaes/f9cozoxjvpzx:78
+          image: hakaes/f9cozoxjvpzx:79
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
