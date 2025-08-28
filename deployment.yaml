@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: backend-kouventa-container
-          image: hakaes/f9cozoxjvpzx:85
+          image: hakaes/f9cozoxjvpzx:latest
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -51,11 +51,11 @@ spec:
             - name: DB_SU_SSLMODE
               value: "disable"
             - name: URL_FRONTEND
-              value: "https://kou2-fe.azurewebsites.net" 
+              value: "https://kou2-fe.azurewebsites.net"
             - name: URL_BACKEND
-              value: "https://pale-round-duck-cabinet.trycloudflare.com" 
+              value: "https://pale-round-duck-cabinet.trycloudflare.com"
             - name: CONFIG_AUTH_EMAIL
-              value: "aegr02adm@gmail.com" 
+              value: "aegr02adm@gmail.com"
             - name: CONFIG_AUTH_PASSWORD
               value: "zptjuepnlvjsdscp"
             - name: AI_API_KEY
@@ -74,6 +74,8 @@ spec:
               value: /pkg/keys/private.pem
             - name: JWT_PUBLIC_KEY_PATH
               value: /pkg/keys/public.pem
+            - name: PATH_FIREBASE_SA
+              value: ./configs/firebase_sa.json
           resources:
             requests:
               cpu: "100m"
