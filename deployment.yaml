@@ -20,7 +20,7 @@ spec:
         - name: regcred
       containers:
         - name: backend-kouventa-container
-          image: hakaes/f9cozoxjvpzx:
+          image: hakaes/f9cozoxjvpzx:103
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -93,7 +93,7 @@ spec:
             capabilities:
               drop:
                 - "ALL"
-              
+
 ---
 apiVersion: v1
 kind: Service
