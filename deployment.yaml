@@ -173,3 +173,23 @@ metadata:
 type: kubernetes.io/dockerconfigjson
 data:
   .dockerconfigjson: ewoJImF1dGhzIjogewoJCSJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOiB7fSwKCQkiaHR0cHM6Ly9pbmRleC5kb2NrZXIuaW8vdjEvYWNjZXNzLXRva2VuIjoge30sCgkJImh0dHBzOi8vaW5kZXguZG9ja2VyLmlvL3YxL3JlZnJlc2gtdG9rZW4iOiB7fQoJfSwKCSJjcmVkc1N0b3JlIjogImRlc2t0b3AiLAoJImN1cnJlbnRDb250ZXh0IjogImRlc2t0b3AtbGludXgiLAoJInBsdWdpbnMiOiB7CgkJIi14LWNsaS1oaW50cyI6IHsKCQkJImVuYWJsZWQiOiAidHJ1ZSIKCQl9LAoJCSJkZWJ1ZyI6IHsKCQkJImhvb2tzIjogImV4ZWMiCgkJfSwKCQkic2NvdXQiOiB7CgkJCSJob29rcyI6ICJwdWxsLGJ1aWxkeCBidWlsZCIKCQl9Cgl9LAoJImZlYXR1cmVzIjogewoJCSJob29rcyI6ICJ0cnVlIgoJfQp9
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: backend-kouventa
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/service-upstream: "true"
+spec:
+  rules:
+    - host: backend-kouventa.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-kouventa-service
+                port:
+                  number: 80
