@@ -156,7 +156,7 @@ metadata:
   labels:
     app: postgres
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: postgres
   ports:
