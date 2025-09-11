@@ -156,7 +156,8 @@ metadata:
   labels:
     app: postgres
 spec:
-  type: ClusterIP
+  # Changed the type to LoadBalancer to make it externally accessible.
+  type: LoadBalancer
   selector:
     app: postgres
   ports:
