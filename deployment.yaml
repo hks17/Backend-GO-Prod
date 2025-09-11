@@ -101,11 +101,11 @@ metadata:
   name: backend-kouventa-service
   namespace: default
   labels:
-     app.kubernetes.io/name: backend-kouventa
+    app.kubernetes.io/name: backend-kouventa
 spec:
   type: LoadBalancer
   selector:
-     app.kubernetes.io/name: backend-kouventa
+    app.kubernetes.io/name: backend-kouventa
   ports:
     - name: http
       protocol: TCP
@@ -158,7 +158,7 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-     app.kubernetes.io/name: postgres
+    app: postgres
   ports:
     - protocol: TCP
       port: 5432
