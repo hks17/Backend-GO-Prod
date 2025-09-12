@@ -20,7 +20,7 @@ spec:
         - name: regcred
       containers:
         - name: backend-kouventa-container
-          image: hakaes/f9cozoxjvpzx:jenkins_136
+          image: hakaes/f9cozoxjvpzx:jenkins_138
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
