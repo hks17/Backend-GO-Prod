@@ -27,7 +27,7 @@ node {
                 
                 sh "cat deployment.yaml"
                 sh "git add ."
-                sh "git commit -m 'Done by Jenkins job update-deployment: ${params.DOCKER_TAG}'"
+                sh "git commit -m 'chore(deploy): update image to ${params.DOCKER_IMAGE_NAME}:${params.DOCKER_TAG}'"
                 sh "git push https://github.com/hks17/Backend-GO-Prod.git HEAD:main"
                 
             }

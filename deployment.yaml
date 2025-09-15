@@ -15,16 +15,12 @@ spec:
       labels:
         app: backend-kouventa
     spec:
-      securityContext:
-        runAsUser: 10001
-        runAsGroup: 10001
-        fsGroup: 10001
-      
+      # Add this section to reference the private registry secret
       imagePullSecrets:
         - name: regcred
       containers:
         - name: backend-kouventa-container
-          image: hakaes/f9cozoxjvpzx:jenkins_142
+          image: hakaes/f9cozoxjvpzx:jenkins_122
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -40,10 +36,7 @@ spec:
             - name: DB_USER
               value: "rootkou"
             - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: db-secret
-                  key: db-password
+              value: "zero_two2025"
             - name: DB_NAME
               value: "kouventa-db"
             - name: DB_SSLMODE
@@ -55,10 +48,7 @@ spec:
             - name: DB_SU_USER
               value: "rootkou"
             - name: DB_SU_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: db-secret
-                  key: db-password
+              value: "zero_two2025"
             - name: DB_SU_NAME
               value: "kouventa-su-db"
             - name: DB_SU_SSLMODE
@@ -68,20 +58,11 @@ spec:
             - name: URL_BACKEND
               value: "https://pale-round-duck-cabinet.trycloudflare.com"
             - name: CONFIG_AUTH_EMAIL
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: auth-email
+              value: "aegr02adm@gmail.com"
             - name: CONFIG_AUTH_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: auth-password
+              value: "zptjuepnlvjsdscp"
             - name: AI_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: ai-api-key
+              value: "2m+UaHSgPZWD/8DuvUBAsAH/v9OHXmU1yj7iKaFkPU0jo85Y"
             - name: AI_API_VERSION
               value: "v1"
             - name: LIMITER_MAX
@@ -89,21 +70,20 @@ spec:
             - name: LIMITER_EXPIRATION
               value: "30"
             - name: KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: key-id
+              value: "7faf5fab4f6961cb47e3308b374a4960"
             - name: UNIQUE_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: unique-key-id
+              value: "db92905a177f134ecfe2"
             - name: JWT_PRIVATE_KEY_PATH
               value: /pkg/keys/private.pem
             - name: JWT_PUBLIC_KEY_PATH
               value: /pkg/keys/public.pem
             - name: PATH_FIREBASE_SA
-              value: ./configs/firebase_sa.json
+              value: /app/configs/firebase_sa.json
+          volumeMounts:
+            - name: pkg-keys
+              mountPath: /pkg/keys
+            - name: firebase-sa-volume
+              mountPath: /app/configs
           resources:
             requests:
               cpu: "100m"
@@ -112,12 +92,18 @@ spec:
               cpu: "500m"
               memory: "256Mi"
           securityContext:
-            allowPrivilegeEscalation: false
             runAsNonRoot: true
-            # runAsUser dan runAsGroup sudah dipindahkan ke spec pod di atas.
-            capabilities:
-              drop:
-                - "ALL"
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+      volumes:
+        - name: firebase-sa-volume
+          configMap:
+            name: firebase-sa
+        - name: pkg-keys
+          configMap:
+            name: pkg
+
 ---
 apiVersion: v1
 kind: Service
@@ -135,7 +121,9 @@ spec:
       protocol: TCP
       port: 80
       targetPort: 3000
+
 ---
+# Deployment untuk container PostgreSQL
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -163,14 +151,12 @@ spec:
             - name: POSTGRES_USER
               value: "rootkou"
             - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: db-secret
-                  key: db-password
+              value: "zero_two2025"
             - name: POSTGRES_DB
               value: "kouventa-db"
             - name: POSTGRES_MULTIPLE_DATABASES
               value: "kouventa-db,kouventa-su-db"
+
 ---
 apiVersion: v1
 kind: Service
@@ -180,13 +166,15 @@ metadata:
   labels:
     app: postgres
 spec:
-  type: ClusterIP
+  # Changed the type to LoadBalancer to make it externally accessible.
+  type: LoadBalancer
   selector:
     app: postgres
   ports:
     - protocol: TCP
       port: 5432
       targetPort: 5432
+
 ---
 apiVersion: v1
 kind: Secret
@@ -196,28 +184,6 @@ metadata:
 type: kubernetes.io/dockerconfigjson
 data:
   .dockerconfigjson: ewoJImF1dGhzIjogewoJCSJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOiB7fSwKCQkiaHR0cHM6Ly9pbmRleC5kb2NrZXIuaW8vdjEvYWNjZXNzLXRva2VuIjoge30sCgkJImh0dHBzOi8vaW5kZXguZG9ja2VyLmlvL3YxL3JlZnJlc2gtdG9rZW4iOiB7fQoJfSwKCSJjcmVkc1N0b3JlIjogImRlc2t0b3AiLAoJImN1cnJlbnRDb250ZXh0IjogImRlc2t0b3AtbGludXgiLAoJInBsdWdpbnMiOiB7CgkJIi14LWNsaS1oaW50cyI6IHsKCQkJImVuYWJsZWQiOiAidHJ1ZSIKCQl9LAoJCSJkZWJ1ZyI6IHsKCQkJImhvb2tzIjogImV4ZWMiCgkJfSwKCQkic2NvdXQiOiB7CgkJCSJob29rcyI6ICJwdWxsLGJ1aWxkeCBidWlsZCIKCQl9Cgl9LAoJImZlYXR1cmVzIjogewoJCSJob29rcyI6ICJ0cnVlIgoJfQp9
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: db-secret
-  namespace: default
-type: Opaque
-stringData:
-  db-password: "zero_two2025"
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: app-secrets
-  namespace: default
-type: Opaque
-stringData:
-  auth-email: "aegr02adm@gmail.com"
-  auth-password: "zptjuepnlvjsdscp"
-  ai-api-key: "2m+UaHSgPZWD/8DuvUBAsAH/v9OHXmU1yj7iKaFkPU0jo85Y"
-  key-id: "7faf5fab4f6961cb47e3308b374a4960"
-  unique-key-id: "db92905a177f134ecfe2"
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
