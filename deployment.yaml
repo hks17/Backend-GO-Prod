@@ -22,7 +22,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: backend-kouventa-container
-          image: hakaes/f9cozoxjvpzx:jenkins_148
+          image: hakaes/f9cozoxjvpzx:jenkins_149
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
