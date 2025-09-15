@@ -96,14 +96,6 @@ spec:
             runAsUser: 1000
             runAsGroup: 1000
             fsGroup: 1000
-      volumes:
-        - name: firebase-sa-volume
-          configMap:
-            name: firebase-sa
-        - name: pkg-keys
-          configMap:
-            name: pkg
-
 ---
 apiVersion: v1
 kind: Service
