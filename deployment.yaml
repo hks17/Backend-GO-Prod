@@ -18,6 +18,8 @@ spec:
       # Add this section to reference the private registry secret
       imagePullSecrets:
         - name: regcred
+      securityContext:
+        fsGroup: 1000
       containers:
         - name: backend-kouventa-container
           image: hakaes/f9cozoxjvpzx:jenkins_144
@@ -34,9 +36,15 @@ spec:
             - name: DB_PORT
               value: "5432"
             - name: DB_USER
-              value: "rootkou"
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-creds
+                  key: POSTGRES_USER
             - name: DB_PASSWORD
-              value: "zero_two2025"
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-creds
+                  key: POSTGRES_PASSWORD
             - name: DB_NAME
               value: "kouventa-db"
             - name: DB_SSLMODE
@@ -46,9 +54,15 @@ spec:
             - name: DB_SU_PORT
               value: "5432"
             - name: DB_SU_USER
-              value: "rootkou"
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-creds
+                  key: POSTGRES_USER
             - name: DB_SU_PASSWORD
-              value: "zero_two2025"
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-creds
+                  key: POSTGRES_PASSWORD
             - name: DB_SU_NAME
               value: "kouventa-su-db"
             - name: DB_SU_SSLMODE
@@ -60,9 +74,15 @@ spec:
             - name: CONFIG_AUTH_EMAIL
               value: "aegr02adm@gmail.com"
             - name: CONFIG_AUTH_PASSWORD
-              value: "zptjuepnlvjsdscp"
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secrets
+                  key: CONFIG_AUTH_PASSWORD
             - name: AI_API_KEY
-              value: "2m+UaHSgPZWD/8DuvUBAsAH/v9OHXmU1yj7iKaFkPU0jo85Y"
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secrets
+                  key: AI_API_KEY
             - name: AI_API_VERSION
               value: "v1"
             - name: LIMITER_MAX
@@ -70,9 +90,15 @@ spec:
             - name: LIMITER_EXPIRATION
               value: "30"
             - name: KEY_ID
-              value: "7faf5fab4f6961cb47e3308b374a4960"
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secrets
+                  key: KEY_ID
             - name: UNIQUE_KEY_ID
-              value: "db92905a177f134ecfe2"
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secrets
+                  key: UNIQUE_KEY_ID
             - name: JWT_PRIVATE_KEY_PATH
               value: /pkg/keys/private.pem
             - name: JWT_PUBLIC_KEY_PATH
@@ -90,7 +116,6 @@ spec:
             runAsNonRoot: true
             runAsUser: 1000
             runAsGroup: 1000
-            fsGroup: 1000
 ---
 apiVersion: v1
 kind: Service
@@ -136,9 +161,15 @@ spec:
             - containerPort: 5432
           env:
             - name: POSTGRES_USER
-              value: "rootkou"
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-creds
+                  key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
-              value: "zero_two2025"
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-creds
+                  key: POSTGRES_PASSWORD
             - name: POSTGRES_DB
               value: "kouventa-db"
             - name: POSTGRES_MULTIPLE_DATABASES
@@ -191,3 +222,16 @@ spec:
                 name: backend-kouventa-service
                 port:
                   number: 80
+
+
+# Create a secret for PostgreSQL credentials
+# kubectl create secret generic postgres-creds \
+#   --from-literal=POSTGRES_USER='rootkou' \
+#   --from-literal=POSTGRES_PASSWORD='zero_two2025'
+
+# # Create a secret for other backend credentials
+# kubectl create secret generic backend-secrets \
+#   --from-literal=CONFIG_AUTH_PASSWORD='zptjuepnlvjsdscp' \
+#   --from-literal=AI_API_KEY='2m+UaHSgPZWD/8DuvUBAsAH/v9OHXmU1yj7iKaFkPU0jo85Y' \
+#   --from-literal=KEY_ID='7faf5fab4f6961cb47e3308b374a4960' \
+#   --from-literal=UNIQUE_KEY_ID='db92905a177f134ecfe2'
