@@ -15,6 +15,11 @@ spec:
       labels:
         app: backend-kouventa
     spec:
+      securityContext:
+        privileged: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
       # Add this section to reference the private registry secret
       imagePullSecrets:
         - name: regcred
@@ -86,11 +91,6 @@ spec:
             limits:
               cpu: "500m"
               memory: "256Mi"
-          securityContext:
-            privileged: true
-            runAsUser: 1000
-            runAsGroup: 1000
-            fsGroup: 2000
 ---
 apiVersion: v1
 kind: Service
