@@ -18,14 +18,21 @@ spec:
       # Add this section to reference the private registry secret
       imagePullSecrets:
         - name: regcred
+      # This defines the volume that the containers can use.
+      # It links the volume name 'pkg-key' to the PersistentVolumeClaim 'pkg-key'.
+      volumes:
+        - name: pkg-key
+          persistentVolumeClaim:
+            claimName: pkg-key
       initContainers:
         - name: permission-fix
           image: busybox
           command: ["sh", "-c"]
           args: ["chmod -R 777 /pkg/keys"]
           volumeMounts:
+            # Mount the volume named 'pkg-key' defined above.
             - mountPath: /pkg/keys
-              name: pkg_key
+              name: pkg-key
       containers:
         - name: backend-kouventa-container
           image: hakaes/f9cozoxjvpzx:jenkins_151
@@ -100,19 +107,23 @@ spec:
             runAsGroup: 1000
             fsGroup: 2000
           volumeMounts:
+            # Mount the same volume named 'pkg-key'.
             - mountPath: /pkg/keys
-              name: pkg_key
+              name: pkg-key
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pkg_key
+  # Changed name from 'pkg_key' to 'pkg-key'
+  name: pkg-key
 spec:
-accessModes:
-  - ReadWriteOnce
-resources:
-  requests:
-    storage: 1Gi
+  # Corrected indentation for accessModes
+  accessModes:
+    - ReadWriteOnce
+  # Corrected indentation for resources
+  resources:
+    requests:
+      storage: 1Gi
 ---
 apiVersion: v1
 kind: Service
