@@ -28,7 +28,7 @@ spec:
               name: pkg_key
       containers:
         - name: backend-kouventa-container
-          image: hakaes/f9cozoxjvpzx:jenkins_122
+          image: hakaes/f9cozoxjvpzx:jenkins_151
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
