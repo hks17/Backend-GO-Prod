@@ -17,8 +17,8 @@ spec:
     spec:
       securityContext:
         privileged: true
-        runAsUser: 1000
-        runAsGroup: 1000
+        runAsUser: 0
+        runAsGroup: 0
         fsGroup: 2000
       # Add this section to reference the private registry secret
       imagePullSecrets:
