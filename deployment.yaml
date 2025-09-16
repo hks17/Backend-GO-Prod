@@ -16,7 +16,6 @@ spec:
         app: backend-kouventa
     spec:
       securityContext:
-        privileged: true
         runAsUser: 0
         runAsGroup: 0
         fsGroup: 2000
