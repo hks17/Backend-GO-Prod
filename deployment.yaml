@@ -18,6 +18,14 @@ spec:
       # Add this section to reference the private registry secret
       imagePullSecrets:
         - name: regcred
+      initContainers:
+        - name: permission-fix
+          image: busybox
+          command: ["sh", "-c"]
+          args: ["chmod -R 777 /pkg/keys"]
+          volumeMounts:
+            - mountPath: /pkg/keys
+              name: pkg_key
       containers:
         - name: backend-kouventa-container
           image: hakaes/f9cozoxjvpzx:jenkins_122
@@ -90,7 +98,21 @@ spec:
             runAsNonRoot: true
             runAsUser: 1000
             runAsGroup: 1000
-            fsGroup: 1000
+            fsGroup: 2000
+          volumeMounts:
+            - mountPath: /pkg/keys
+              name: pkg_key
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pkg_key
+spec:
+accessModes:
+  - ReadWriteOnce
+resources:
+  requests:
+    storage: 1Gi
 ---
 apiVersion: v1
 kind: Service
