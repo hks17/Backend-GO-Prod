@@ -193,7 +193,7 @@ spec:
                   number: 80
 ---
 # -------- FRONTEND --------
-apiVersion: fronted
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend-kouventa-deployment
@@ -204,14 +204,14 @@ spec:
   replicas: 2
   selector:
     matchLabels:
-      app: frontend-kouventa # Matches the template's app label
+      app: frontend-kouventa
   template:
     metadata:
       labels:
         app: frontend-kouventa
     spec:
       imagePullSecrets:
-        - name: cred-secret
+        - name: cred-secret-fe
       containers:
         - name: frontend-kouventa-container
           image: hakaes/hkasdas0fzxf123:frontend_22
@@ -245,21 +245,21 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    app: frontend-kouventa # Should match the Deployment's pod template label
+    app: frontend-kouventa
   ports:
     - name: http
       protocol: TCP
-      port: 80 # Service port
-      targetPort: 3000 # Container port
+      port: 80
+      targetPort: 3000
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: cred-secret
+  name: cred-secret-fe
   namespace: default
 type: kubernetes.io/dockerconfigjson
 data:
-  .dockerconfigjson: eyJhdXRocyI6eyJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOnt9LCJodHRwczovL2luZGV4LmRvY2tlci5pby92MS9hY2Nlc3MtdG9rZW4iOnt9LCJodHRwczovL2luZGV4LmRvY2tlci5pby92MS9yZWZyZXNoLXRva2VuIjp7fX0sImNyZWRzU3RvcmUiOiJkZXNrdG9wIiwiY3VycmVudENvbnRleHQiOiJkZXNrdG9wLWxpbnV4IiwicGx1Z2lucyI6eyJweC1jbGktaGludHMiOnsiZW5hYmxlZCI6InRydWUifSwiZGVidWciOnsiaG9va3MiOiJleGVjIn0sInNjb3V0Ijp7Imhvb2tzIjoicHVsbCxidWlsZCBidWlsZCJ9fSwiZmVhdHVyZXMiOnsiaG9va3MiOiJ0cnVlIn19 # Base64 encoded docker config json
+  .dockerconfigjson: eyJhdXRocyI6eyJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOnt9LCJodHRwczovL2luZGV4LmRvY2tlci5pby92MS9hY2Nlc3MtdG9rZW4iOnt9LCJodHRwczovL2luZGV4LmRvY2tlci5pby92MS9yZWZyZXNoLXRva2VuIjp7fX0sImNyZWRzU3RvcmUiOiJkZXNrdG9wIiwiY3VycmVudENvbnRleHQiOiJkZXNrdG9wLWxpbnV4IiwicGx1Z2lucyI6eyJweC1jbGktaGludHMiOnsiZW5hYmxlZCI6InRydWUifSwiZGVidWciOnsiaG9va3MiOiJleGVjIn0sInNjb3V0Ijp7Imhvb2tzIjoicHVsbCxidWlsZCBidWlsZCJ9fSwiZmVhdHVyZXMiOnsiaG9va3MiOiJ0cnVlIn19
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -279,5 +279,4 @@ spec:
               service:
                 name: frontend-kouventa-service
                 port:
-                  number: 80 # This should be the Service's port, not the targetPort
-
+                  number: 80
