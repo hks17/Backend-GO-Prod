@@ -221,6 +221,36 @@ spec:
               value: "http://backend-kouventa-service.default.svc.cluster.local"
             - name: NEXT_PUBLIC_WS_URL
               value: "http://backend-kouventa-service.default.svc.cluster.local"
+            - name: NEXT_PUBLIC_RECAPTCHAV2_SITE_KEY
+              value: "6LdRdRYqAAAAAD3gl6hzirzfa1VynOrNCkZ0R1pT"
+            - name: NEXT_PUBLIC_RECAPTCHAV3_SITE_KEY
+              value: "6LegdhYqAAAAACF2s25bcGFzF-6oV6t6lhiYoRY4"
+            - name: NEXT_PUBLIC_META_APP_ID
+              value: "1544113996035775"
+            - name: NEXT_PUBLIC_META_WA_LOGIN_CONFIG_ID
+              value: "612298117559775"
+            - name: NEXT_PUBLIC_META_FB_LOGIN_CONFIG_ID
+              value: "3773943206268302"
+            - name: NEXT_PUBLIC_META_IG_LOGIN_CONFIG_ID
+              value: "1086651012803294"
+            - name: NEXT_PUBLIC_FIREBASE_API_KEY
+              value: "AIzaSyApa1xRtt5CqWiP4ZpZz1tFyXtrtQYHHU4"
+            - name: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+              value: "file-repository-fcede.firebaseapp.com"
+            - name: NEXT_PUBLIC_FIREBASE_DATABASE_URL
+              value: "https://file-repository-fcede.firebaseio.com"
+            - name: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+              value: "file-repository-fcede"
+            - name: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+              value: "file-repository-fcede.appspot.com"
+            - name: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+              value: "598441697685"
+            - name: NEXT_PUBLIC_FIREBASE_APP_ID
+              value: "1:598441697685:web:44b1b40e6cf6dabc85969c"
+            - name: NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+              value: "G-ZXSXSQJ988"
+            - name: NEXT_PUBLIC_MULTI_PLATFORM_STATUS
+              value: "false"
           ports:
             - name: http
               containerPort: 3000
